@@ -31,13 +31,14 @@ dependencies {
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-def frontendDir = "$projectDir/src/main/reactfront"
+def frontendDir = "$projectDir/../reactfront"
 
 sourceSets {
 	main {
