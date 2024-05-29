@@ -1,13 +1,15 @@
 package com.gunu.todolist.service.implement;
 
+import com.gunu.todolist.dto.request.auth.SignInRequestDto;
 import com.gunu.todolist.dto.request.auth.SignUpRequestDto;
 import com.gunu.todolist.dto.response.ResponseDto;
-import com.gunu.todolist.dto.response.auth.SignUpReponseDto;
+import com.gunu.todolist.dto.response.auth.SignInResponseDto;
+import com.gunu.todolist.dto.response.auth.SignUpResponseDto;
 import com.gunu.todolist.entity.UserEntity;
+import com.gunu.todolist.provider.JwtProvider;
 import com.gunu.todolist.repository.UserRepository;
 import com.gunu.todolist.service.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,26 +47,27 @@ public class AuthServiceImplement implements AuthService {
      */
 
     private final UserRepository userRepository;
+    private final JwtProvider jwtProvider;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public ResponseEntity<? super SignUpReponseDto> signUp(SignUpRequestDto dto) {
+    public ResponseEntity<? super SignUpResponseDto> signUp(SignUpRequestDto dto) {
 
         try {
             String email = dto.getEmail();
             boolean existedEmail = userRepository.existsByEmail(email);
-            if(existedEmail) return  SignUpReponseDto.DuplicateEmail();
+            if(existedEmail) return  SignUpResponseDto.DuplicateEmail();
 
             String nickname = dto.getNickname();
             boolean existedNickname = userRepository.existsByNickname(nickname);
-            if(existedNickname) return SignUpReponseDto.DuplicateNickname();
+            if(existedNickname) return SignUpResponseDto.DuplicateNickname();
 
             String telNumber = dto.getTelNumber();
             boolean existedTelNumber = userRepository.existsByTelNumber(telNumber);
-            if(existedTelNumber) return SignUpReponseDto.DuplicateTelNumber();
+            if(existedTelNumber) return SignUpResponseDto.DuplicateTelNumber();
 
-            String password = dto.getPassword();
-            String encodedPassword = passwordEncoder.encode(password);
+            String password = dto.getPassword();    //평문
+            String encodedPassword = passwordEncoder.encode(password);  //SpringSecurity로 암호화
             dto.setPassword(encodedPassword);
 
             UserEntity userEntity = new UserEntity(dto);
@@ -74,6 +77,35 @@ public class AuthServiceImplement implements AuthService {
             exception.printStackTrace();
             return ResponseDto.databaseError();
         }
-        return SignUpReponseDto.success();
+        return SignUpResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super SignInResponseDto> signIn(SignInRequestDto dto) {
+
+        String token = null;
+
+        try {
+            String email = dto.getEmail();
+            UserEntity userEntity = userRepository.findByEmail(email);
+            if (userEntity == null) {
+                return SignInResponseDto.signInFaile();
+            }
+
+            String password = dto.getPassword();
+            String encodedPassword = userEntity.getPassword();
+            boolean isMatched = passwordEncoder.matches(password, encodedPassword);
+            if (!isMatched) {
+                return SignInResponseDto.signInFaile();
+            }
+
+            token = jwtProvider.create(email);
+
+        } catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return SignInResponseDto.success(token);
     }
 }

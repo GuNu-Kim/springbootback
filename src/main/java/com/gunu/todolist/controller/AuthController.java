@@ -1,7 +1,9 @@
 package com.gunu.todolist.controller;
 
+import com.gunu.todolist.dto.request.auth.SignInRequestDto;
 import com.gunu.todolist.dto.request.auth.SignUpRequestDto;
-import com.gunu.todolist.dto.response.auth.SignUpReponseDto;
+import com.gunu.todolist.dto.response.auth.SignInResponseDto;
+import com.gunu.todolist.dto.response.auth.SignUpResponseDto;
 import com.gunu.todolist.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,14 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/sign-up")
-    public ResponseEntity<? super SignUpReponseDto> signUp(@RequestBody @Valid SignUpRequestDto requestBody){
-        ResponseEntity<? super SignUpReponseDto> response = authService.signUp(requestBody);
+    public ResponseEntity<? super SignUpResponseDto> signUp(@RequestBody @Valid SignUpRequestDto requestBody){
+        ResponseEntity<? super SignUpResponseDto> response = authService.signUp(requestBody);
+        return response;
+    }
+
+    @PostMapping("/sign-in")
+    public ResponseEntity<? super SignInResponseDto> signIn(@RequestBody @Valid SignInRequestDto requestBody){
+        ResponseEntity<? super SignInResponseDto> response = authService.signIn(requestBody);
         return response;
     }
 
