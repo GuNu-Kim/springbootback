@@ -2,12 +2,14 @@ package com.gunu.todolist.service.implement;
 
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
 import com.gunu.todolist.dto.response.ResponseDto;
+import com.gunu.todolist.dto.response.board.GetBoardResponseDto;
 import com.gunu.todolist.dto.response.board.PostBoardResponseDto;
 import com.gunu.todolist.entity.BoardEntity;
 import com.gunu.todolist.entity.ImageEntity;
 import com.gunu.todolist.repository.BoardRepository;
 import com.gunu.todolist.repository.ImageRepository;
 import com.gunu.todolist.repository.UserRepository;
+import com.gunu.todolist.repository.resultSet.GetBoardResultSet;
 import com.gunu.todolist.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -26,6 +28,29 @@ public class BoardServiceImplement implements BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final ImageRepository imageRepository;
+
+    @Override
+    public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
+
+        GetBoardResultSet resultSet = null;
+        List<ImageEntity> imageEntities = new ArrayList<>();
+
+        try {
+            resultSet = boardRepository.getBoard(boardNumber);
+            if(resultSet == null) return GetBoardResponseDto.noExistBoard();
+
+            imageEntities = imageRepository.findByBoardNumber(boardNumber);
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            boardEntity.increaseViewCount();
+            boardRepository.save(boardEntity);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+        return GetBoardResponseDto.success(resultSet, imageEntities);
+    }
 
     @Override
     public ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email) {

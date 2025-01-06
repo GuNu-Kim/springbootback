@@ -13,11 +13,11 @@ import javax.persistence.*;
 public class ImageEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int sequance;
-    private int BoardNumber;
+    private int boardNumber;
     private String image;
 
     public ImageEntity(int boardNumber, String image){
-        this.BoardNumber = boardNumber;
+        this.boardNumber = boardNumber;
         this.image = image;
 
     }
