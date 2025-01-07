@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
 
+    boolean existsByBoardNumber(Integer boardNumber);
+
     BoardEntity findByBoardNumber(Integer boardNumber);
 
     //Native Query를 사용해서 조인문
