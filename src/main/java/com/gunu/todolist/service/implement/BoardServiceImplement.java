@@ -3,6 +3,7 @@ package com.gunu.todolist.service.implement;
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
 import com.gunu.todolist.dto.response.ResponseDto;
 import com.gunu.todolist.dto.response.board.GetBoardResponseDto;
+import com.gunu.todolist.dto.response.board.GetFavoriteListResponseDto;
 import com.gunu.todolist.dto.response.board.PostBoardResponseDto;
 import com.gunu.todolist.dto.response.board.PutFavoriteResponseDto;
 import com.gunu.todolist.entity.BoardEntity;
@@ -13,6 +14,7 @@ import com.gunu.todolist.repository.FavoriteRepository;
 import com.gunu.todolist.repository.ImageRepository;
 import com.gunu.todolist.repository.UserRepository;
 import com.gunu.todolist.repository.resultSet.GetBoardResultSet;
+import com.gunu.todolist.repository.resultSet.GetFavoriteListResultSet;
 import com.gunu.todolist.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -54,6 +56,24 @@ public class BoardServiceImplement implements BoardService {
             return ResponseDto.databaseError();
         }
         return GetBoardResponseDto.success(resultSet, imageEntities);
+    }
+
+    @Override
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Integer boardNumber) {
+
+        List<GetFavoriteListResultSet> resultSets = new ArrayList<>();
+        try {
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if(!existedBoard)
+                return GetFavoriteListResponseDto.noExistBoard();
+
+            resultSets = favoriteRepository.getFavoriteList(boardNumber);
+        } catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetFavoriteListResponseDto.success(resultSets);
     }
 
     @Override

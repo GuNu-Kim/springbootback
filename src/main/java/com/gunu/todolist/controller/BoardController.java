@@ -2,6 +2,7 @@ package com.gunu.todolist.controller;
 
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
 import com.gunu.todolist.dto.response.board.GetBoardResponseDto;
+import com.gunu.todolist.dto.response.board.GetFavoriteListResponseDto;
 import com.gunu.todolist.dto.response.board.PostBoardResponseDto;
 import com.gunu.todolist.dto.response.board.PutFavoriteResponseDto;
 import com.gunu.todolist.service.BoardService;
@@ -23,6 +24,13 @@ public class BoardController {
     public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable("boardNumber") Integer boardNumber){
 
         ResponseEntity<? super GetBoardResponseDto> response = boardService.getBoard(boardNumber);
+        return response;
+    }
+
+    @GetMapping("/{boardNumber}/favorite-list")
+    public ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(@PathVariable("boardNumber") Integer boardNumber){
+
+        ResponseEntity<? super GetFavoriteListResponseDto> response = boardService.getFavoriteList(boardNumber);
         return response;
     }
 
