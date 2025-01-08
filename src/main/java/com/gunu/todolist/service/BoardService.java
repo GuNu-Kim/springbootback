@@ -1,10 +1,8 @@
 package com.gunu.todolist.service;
 
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
-import com.gunu.todolist.dto.response.board.GetBoardResponseDto;
-import com.gunu.todolist.dto.response.board.GetFavoriteListResponseDto;
-import com.gunu.todolist.dto.response.board.PostBoardResponseDto;
-import com.gunu.todolist.dto.response.board.PutFavoriteResponseDto;
+import com.gunu.todolist.dto.request.board.PostCommentRequestDto;
+import com.gunu.todolist.dto.response.board.*;
 import org.springframework.http.ResponseEntity;
 
 public interface BoardService {
@@ -12,6 +10,7 @@ public interface BoardService {
     ResponseEntity<? super GetFavoriteListResponseDto> getFavoriteList(Integer boardNumber);
 
     ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
+    ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email);
 
     ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email);
 }

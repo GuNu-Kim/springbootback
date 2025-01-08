@@ -1,18 +1,14 @@
 package com.gunu.todolist.service.implement;
 
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
+import com.gunu.todolist.dto.request.board.PostCommentRequestDto;
 import com.gunu.todolist.dto.response.ResponseDto;
-import com.gunu.todolist.dto.response.board.GetBoardResponseDto;
-import com.gunu.todolist.dto.response.board.GetFavoriteListResponseDto;
-import com.gunu.todolist.dto.response.board.PostBoardResponseDto;
-import com.gunu.todolist.dto.response.board.PutFavoriteResponseDto;
+import com.gunu.todolist.dto.response.board.*;
 import com.gunu.todolist.entity.BoardEntity;
+import com.gunu.todolist.entity.CommentEntity;
 import com.gunu.todolist.entity.FavoriteEntity;
 import com.gunu.todolist.entity.ImageEntity;
-import com.gunu.todolist.repository.BoardRepository;
-import com.gunu.todolist.repository.FavoriteRepository;
-import com.gunu.todolist.repository.ImageRepository;
-import com.gunu.todolist.repository.UserRepository;
+import com.gunu.todolist.repository.*;
 import com.gunu.todolist.repository.resultSet.GetBoardResultSet;
 import com.gunu.todolist.repository.resultSet.GetFavoriteListResultSet;
 import com.gunu.todolist.service.BoardService;
@@ -31,8 +27,9 @@ public class BoardServiceImplement implements BoardService {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final BoardRepository boardRepository;
-    private final UserRepository userRepository;
     private final ImageRepository imageRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
 
     @Override
@@ -104,6 +101,32 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return PostBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email) {
+
+        try {
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if(boardEntity == null)
+                return PostCommentResponseDto.noExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if(!existedUser)
+                return PostCommentResponseDto.noExistUser();
+
+            CommentEntity commentEntity = new CommentEntity(dto, boardNumber, email);
+            commentRepository.save(commentEntity);
+
+            boardEntity.increaseCommentCount();
+            boardRepository.save(boardEntity);
+
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return PostCommentResponseDto.success();
     }
 
     @Override
