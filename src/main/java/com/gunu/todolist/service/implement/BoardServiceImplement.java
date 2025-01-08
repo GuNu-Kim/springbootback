@@ -10,6 +10,7 @@ import com.gunu.todolist.entity.FavoriteEntity;
 import com.gunu.todolist.entity.ImageEntity;
 import com.gunu.todolist.repository.*;
 import com.gunu.todolist.repository.resultSet.GetBoardResultSet;
+import com.gunu.todolist.repository.resultSet.GetCommentListResultSet;
 import com.gunu.todolist.repository.resultSet.GetFavoriteListResultSet;
 import com.gunu.todolist.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -71,6 +72,23 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return GetFavoriteListResponseDto.success(resultSets);
+    }
+
+    @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber) {
+        List<GetCommentListResultSet> resultSets = new ArrayList<>();
+        try {
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if(!existedBoard)
+                return GetCommentListResponseDto.noExistBoard();
+
+            resultSets = commentRepository.getCommentList(boardNumber);
+        } catch (Exception exception){
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetCommentListResponseDto.success(resultSets);
     }
 
     @Override
