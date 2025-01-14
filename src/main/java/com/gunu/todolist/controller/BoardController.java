@@ -39,6 +39,12 @@ public class BoardController {
         return response;
     }
 
+    @GetMapping("/{boardNumber}/increase-view-count")
+    public ResponseEntity<? super IncreaseViewCountResponseDto> invreaseViewCount(@PathVariable("boardNumber") Integer boardNumber) {
+        ResponseEntity<? super IncreaseViewCountResponseDto> response = boardService.increaseViewCount(boardNumber);
+        return response;
+    }
+
     @PostMapping("")
     public ResponseEntity<? super PostBoardResponseDto> postBoard(@RequestBody @Valid PostBoardRequestDto requestBody, @AuthenticationPrincipal String email){
         ResponseEntity<? super PostBoardResponseDto> response = boardService.postBoard(requestBody, email);
@@ -52,7 +58,7 @@ public class BoardController {
     }
 
     @PutMapping("/{boardNumber}/favorite")
-    public ResponseEntity<? super PutFavoriteResponseDto> PutFavorite(@PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email){
+    public ResponseEntity<? super PutFavoriteResponseDto> PutFavorite(@PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email) {
         ResponseEntity<? super PutFavoriteResponseDto> response = boardService.putFavorite(boardNumber, email);
         return response;
     }
