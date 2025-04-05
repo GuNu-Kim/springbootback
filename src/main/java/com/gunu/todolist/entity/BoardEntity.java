@@ -1,5 +1,6 @@
 package com.gunu.todolist.entity;
 
+import com.gunu.todolist.dto.request.board.PatchBoardRequestDto;
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -57,6 +58,9 @@ public class BoardEntity {
         this.favoriteCount--;
     }
 
-
+    public  void patchBoard(PatchBoardRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+    }
 
 }

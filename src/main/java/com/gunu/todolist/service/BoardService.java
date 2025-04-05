@@ -1,5 +1,6 @@
 package com.gunu.todolist.service;
 
+import com.gunu.todolist.dto.request.board.PatchBoardRequestDto;
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
 import com.gunu.todolist.dto.request.board.PostCommentRequestDto;
 import com.gunu.todolist.dto.response.board.*;
@@ -14,6 +15,8 @@ public interface BoardService {
     ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email);
 
     ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email);
+
+    ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email);
 
     ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber);
 
