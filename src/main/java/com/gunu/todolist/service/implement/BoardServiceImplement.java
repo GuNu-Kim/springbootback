@@ -1,14 +1,12 @@
 package com.gunu.todolist.service.implement;
 
+import com.gunu.todolist.dto.response.board.GetLatestBoardListResponseDto;
 import com.gunu.todolist.dto.request.board.PatchBoardRequestDto;
 import com.gunu.todolist.dto.request.board.PostBoardRequestDto;
 import com.gunu.todolist.dto.request.board.PostCommentRequestDto;
 import com.gunu.todolist.dto.response.ResponseDto;
 import com.gunu.todolist.dto.response.board.*;
-import com.gunu.todolist.entity.BoardEntity;
-import com.gunu.todolist.entity.CommentEntity;
-import com.gunu.todolist.entity.FavoriteEntity;
-import com.gunu.todolist.entity.ImageEntity;
+import com.gunu.todolist.entity.*;
 import com.gunu.todolist.repository.*;
 import com.gunu.todolist.repository.resultSet.GetBoardResultSet;
 import com.gunu.todolist.repository.resultSet.GetCommentListResultSet;
@@ -20,7 +18,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -33,6 +35,7 @@ public class BoardServiceImplement implements BoardService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final FavoriteRepository favoriteRepository;
+    private final BoardListViewRepository boardListViewRepository;
 
     @Override
     public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
@@ -86,6 +89,41 @@ public class BoardServiceImplement implements BoardService {
         }
 
         return GetCommentListResponseDto.success(resultSets);
+    }
+
+    @Override
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
+
+        List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+        try {
+            boardListViewEntities = boardListViewRepository.findByOrderByWriteDateTimeDesc();
+            System.out.println("latest" + boardListViewEntities == null);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetLatestBoardListResponseDto.seccess(boardListViewEntities);
+    }
+
+    @Override
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
+
+        List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+        try {
+
+            Date beforeWeek = Date.from(Instant.now().minus(7, ChronoUnit.DAYS));
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String sevenDaysAgo = simpleDateFormat.format(beforeWeek);
+
+            boardListViewEntities = boardListViewRepository.findTop3ByWriteDateTimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDateTimeDesc(sevenDaysAgo);
+            System.out.println("top" + boardListViewEntities == null);
+        } catch (Exception exception) {
+            exception.printStackTrace();
+            return ResponseDto.databaseError();
+        }
+
+        return GetTop3BoardListResponseDto.success(boardListViewEntities);
     }
 
     @Override
