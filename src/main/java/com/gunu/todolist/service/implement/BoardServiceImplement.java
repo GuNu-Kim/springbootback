@@ -97,7 +97,6 @@ public class BoardServiceImplement implements BoardService {
         List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
         try {
             boardListViewEntities = boardListViewRepository.findByOrderByWriteDateTimeDesc();
-            System.out.println("latest" + boardListViewEntities == null);
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();
@@ -117,7 +116,6 @@ public class BoardServiceImplement implements BoardService {
             String sevenDaysAgo = simpleDateFormat.format(beforeWeek);
 
             boardListViewEntities = boardListViewRepository.findTop3ByWriteDateTimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDateTimeDesc(sevenDaysAgo);
-            System.out.println("top" + boardListViewEntities == null);
         } catch (Exception exception) {
             exception.printStackTrace();
             return ResponseDto.databaseError();

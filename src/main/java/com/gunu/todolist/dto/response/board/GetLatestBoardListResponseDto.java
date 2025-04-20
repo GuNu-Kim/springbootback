@@ -5,10 +5,12 @@ import com.gunu.todolist.common.ResponseMessage;
 import com.gunu.todolist.dto.object.BoardListItem;
 import com.gunu.todolist.dto.response.ResponseDto;
 import com.gunu.todolist.entity.BoardListViewEntity;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 
+@Getter
 public class GetLatestBoardListResponseDto extends ResponseDto {
 
     private List<BoardListItem> latestList;

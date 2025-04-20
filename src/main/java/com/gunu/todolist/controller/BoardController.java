@@ -50,20 +50,12 @@ public class BoardController {
     @GetMapping("/latest-list")
     public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
         ResponseEntity<? super GetLatestBoardListResponseDto> response = boardService.getLatestBoardList();
-        if(response == null)
-            System.out.println("latest-list는 null");
-        else
-            System.out.println("latest-list" + response.toString());
         return response;
     }
 
     @GetMapping("/top-3")
     public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
         ResponseEntity<? super GetTop3BoardListResponseDto> response = boardService.getTop3BoardList();
-        if(response == null)
-            System.out.println("top-3는 null");
-        else
-            System.out.println("top-3" + response.toString());
         return response;
     }
 
