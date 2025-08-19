@@ -20,7 +20,7 @@ public class CommentEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int commentNumber;
     private String content;
-    private String writeDatetime;
+    private String writeDateTime;
     private String userEmail;
     private int boardNumber;
 
@@ -29,10 +29,10 @@ public class CommentEntity {
 
         Date now = Date.from(Instant.now());
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        String writeDatetime = simpleDateFormat.format(now);
+        String writeDateTime = simpleDateFormat.format(now);
 
         this.content = dto.getContent();
-        this.writeDatetime = writeDatetime;
+        this.writeDateTime = writeDateTime;
         this.userEmail = email;
         this.boardNumber = boardNumber;
     }
