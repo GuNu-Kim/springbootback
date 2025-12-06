@@ -20,7 +20,7 @@ public interface CommentRepository extends JpaRepository<CommentEntity, Integer>
             "FROM comment AS C " +
             "INNER JOIN user AS U " +
             "ON C.user_email = U.email " +
-            "WHERE c.board_number = ?1 " +
+            "WHERE C.board_number = ?1 " +
             "ORDER BY writeDateTime DESC ",
             nativeQuery=true)
 

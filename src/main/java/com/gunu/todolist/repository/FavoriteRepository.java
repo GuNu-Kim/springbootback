@@ -21,7 +21,7 @@ public interface FavoriteRepository extends JpaRepository<FavoriteEntity, Favori
             " U.profile_image AS profileImage " +
             "FROM favorite AS F " +
             "INNER JOIN user as U " +
-            "ON f.board_Number= ?1 ",
+            "ON F.board_Number= ?1 ",
 
             nativeQuery = true
     )

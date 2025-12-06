@@ -19,7 +19,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
             " B.write_date_time AS writeDateTime, B.writer_email AS writerEmail, " +
             " U.nickname AS writerNickname, U.profile_image AS writerprofileImage " +
             "FROM board AS B " +
-            "INNER JOIN user AS U ON b.writer_email = U.email "+
+            "INNER JOIN user AS U ON B.writer_email = U.email "+
             "WHERE board_number = ?1",
 
             nativeQuery=true
